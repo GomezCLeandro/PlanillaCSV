@@ -9,7 +9,7 @@ try {
 
     $datos = array();
 
-    $linea =1;
+    $linea = 1;
     $tmp_name = $_FILES['archivo']['tmp_name'];
     if (($handle = fopen($tmp_name, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
@@ -93,7 +93,7 @@ try {
                     if ($d && $d->format($formatoFecha) == $data[6]) {
                         $arrayTmp['fechaFinViaje'] = trim($data[6]);
                     } else {
-                        throw new Exception("Documento no valido (fecha de fin de viaje no valido) $data[6]",400);
+                        throw new Exception("Documento no valido (fecha de fin de viaje no valido) $data[6]", 400);
                     }
                 } else {
                     $arrayTmp['fechaFinViaje'] = '';
@@ -119,27 +119,40 @@ try {
 
     $mysqli = new mysqli($servidor, $usuario, '', $baseDatos);
     if ($mysqli->connect_errno) {
-        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        throw new Exception("Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error, 1);
     }
+
+    // Se inicia una transaccion
+
+    $mysqli->begin_transaction();
 
     //Se recorre el array datos y se guarda uno por uno las personas 
     foreach ($datos as $persona) {
         $sqlInsert = "INSERT INTO `testcsv`.`viaje` (`nombre`, `apellido`, `documento`, `organismo`, `viatico`, `fecha_inicio_viaje`, `fecha_fin_viaje`) VALUES ";
 
-        $sqlValor = "('".$persona['nombre']."','".$persona['apellido']."','".$persona['documento']."','".$persona['organismo']."','".$persona['viatico']."','".$persona['fechaInicioViaje']."','".$persona['fechaFinViaje']."');";
-        
+        $sqlValor = "('" . $persona['nombre'] . "','" . $persona['apellido'] . "','" . $persona['documento'] . "','" . $persona['organismo'] . "','" . $persona['viatico'] . "','" . $persona['fechaInicioViaje'] . "','" . $persona['fechaFinViaje'] . "');";
+
         $sqlFinal = $sqlInsert . $sqlValor;
-        $mysqli->query($sqlFinal);
+
+        // En caso de que alguna de las query resulte en error se realiza un rollback y se manda una excepcion
+
+        if (!$mysqli->query($sqlFinal)) {
+            $mysqli->rollback();
+            throw new Exception("Hubo un error al guardar los datos en la base de datos", 500);
+        }
     }
+
+    // En caso de que todos los datos se hayan guardado correctamente se realiza un commit
+
+    $mysqli->commit();
 
     echo json_encode(
         array(
             'status' => true,
             'code' => 200,
-            'datos' => $datos
+            'message'=>'Datos guardados correctamente'
         )
     );
-
 } catch (Exception $e) {
     http_response_code($e->getCode());
     echo json_encode(

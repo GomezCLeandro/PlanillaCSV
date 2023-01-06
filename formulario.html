@@ -36,7 +36,7 @@
             let rsJSON = $.parseJSON(respuesta)
             console.log(rsJSON)
             if(rsJSON.status){
-                alert("Archivo enviado")
+                alert(rsJSON.message)
             } 
         })
     })
