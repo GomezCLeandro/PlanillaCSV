@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+</head>
+<body>
+    <form id="formulario" method="POST" enctype="multipart/form-data">
+        <input type="file" name="archivo" id="archivo">
+        <br>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+<script src="jquery.min.js"></script>
+<script>
+
+    //Se manda el archivo csv
+    $("#formulario").submit(function(e){
+        e.preventDefault()
+        let datosForm = new FormData(this)
+        $.ajax({
+            url:"guardar.php",
+            type:'POST',
+            data:datosForm,
+            processData: false,
+            contentType: false,
+            error: function (request, status, error) {
+                let rsJSON = $.parseJSON(request.responseText)
+                if(!rsJSON.status){
+                    alert(rsJSON.message)
+                }
+            }
+        }).done(function(respuesta){
+            let rsJSON = $.parseJSON(respuesta)
+            console.log(rsJSON)
+            if(rsJSON.status){
+                alert("Archivo enviado")
+            } 
+        })
+    })
+</script>
+</html>
