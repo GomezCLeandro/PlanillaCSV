@@ -1,1 +1,33 @@
-Instruciones de instalacion y/despliegueSe debe ejecutar el instalador de xampp-windows, una vez instalado, iniciar 'apache' y 'MySQL'con ambas opciones funcionando hay que dirigirse a esta enlace -----------------------------------------------------------------	http://localhost/phpmyadmin/index.php?lang=es-----------------------------------------------------------------En el apartado de 'SQL' ejecutar los siguientes sql en orden 1	CREATE DATABASE testcsv 2	 CREATE TABLE viaje (	id_viaje INT AUTO_INCREMENT NOT NULL,    nombre VARCHAR(10),    apellido VARCHAR(10),    documento INT(8),    organismo VARCHAR(50),    viatico INT,    fecha_inicio_viaje VARCHAR(10),    fecha_fin_viaje VARCHAR(10),	PRIMARY KEY(id_viaje));Creado la Base de Datos, ya ir al siguiente enlace y pueden cargar los archivos csv-----------------------------------------------------------------	http://localhost/Planillacsv/formulario.html-----------------------------------------------------------------SQL para validar la carga de datos SELECT * FROM viaje
+Instruciones de instalacion y/despliegue
+
+Se debe instalar de xampp-windows, una vez instalado, iniciar 'apache' y 'MySQL'
+
+con ambas opciones funcionando hay que dirigirse a esta enlace 
+-----------------------------------------------------------------
+	http://localhost/phpmyadmin/index.php?lang=es
+-----------------------------------------------------------------
+
+En el apartado de 'SQL' ejecutar los siguientes sql en orden
+
+ 1	CREATE DATABASE testcsv
+
+ 2	 CREATE TABLE viaje (
+	id_viaje INT AUTO_INCREMENT NOT NULL,
+    nombre VARCHAR(10),
+    apellido VARCHAR(10),
+    documento INT(8),
+    organismo VARCHAR(50),
+    viatico INT,
+    fecha_inicio_viaje VARCHAR(10),
+    fecha_fin_viaje VARCHAR(10),
+	PRIMARY KEY(id_viaje));
+
+
+Creado la Base de Datos, ya ir al siguiente enlace y pueden cargar los archivos csv
+-----------------------------------------------------------------
+	http://localhost/Planillacsv/formulario.html
+-----------------------------------------------------------------
+
+SQL para validar la carga de datos 
+
+SELECT * FROM viaje
